@@ -28,7 +28,12 @@ const start = async () => {
     log(`⚙️ Launched shard ${shard.id}...`);
     shard.on('ready', shardReady);
   });
-  manager.spawn('auto', Number(process.env.SHARD_SPAWN_DELAY || 15000), Number(process.env.SHARD_SPAWN_TIMEOUT || 60000));
+  try {
+    manager.spawn('auto', Number(process.env.SHARD_SPAWN_DELAY || 15000), Number(process.env.SHARD_SPAWN_TIMEOUT || 60000));
+  } catch (e) {
+    log('Error while starting up shards:');
+    console.error(e);
+  }
 };
 
 start();
