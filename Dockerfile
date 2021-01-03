@@ -10,10 +10,10 @@ RUN for file in ./lang/*.ftl; do f=${file%.ftl}; cat $file | envsubst '$BOT_NAME
 FROM node:15.0.1-slim
 WORKDIR /usr/src/app
 
-# Copy build files and install using yarn
+# Copy build files and install using npm
 COPY package.json .
-COPY yarn.lock .
-RUN yarn install --production
+COPY package-lock.json .
+RUN npm install
 
 # Copy everything over
 COPY . .

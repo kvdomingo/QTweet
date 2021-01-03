@@ -4,11 +4,17 @@
   "description": "A cute bot who cross-posts twitter posts to Discord",
   "main": "src/index.js",
   "scripts": {
+    "build": "bash script/build.sh",
     "lint": "yarn eslint src/* --fix"
+  },
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.14.8"
   },
   "author": "Thomas Navennec",
   "license": "AGPL-3.0",
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0"
@@ -22,5 +28,23 @@
     "pg": "^8.2.1",
     "twitter-lite": "latest",
     "unfurl.js": "^3.0.1"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "extends": [
+      "airbnb-base"
+    ],
+    "globals": {
+      "Atomics": "readonly",
+      "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    "rules": {}
   }
 }

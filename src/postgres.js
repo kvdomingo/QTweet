@@ -1,10 +1,12 @@
 import { Pool } from 'pg';
 import log from './log';
 
+const connectionString = process.env.DATABASE_URL;
+
 let pool;
 
 export const init = () => {
-  pool = new Pool();
+  pool = new Pool({ connectionString });
 };
 
 export const close = async () => {
