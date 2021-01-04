@@ -12,7 +12,6 @@ import { post, someoneHasChannel } from './shardManager';
 import Stream from './twitterStream';
 import { getChannels, rmChannel } from './postgres';
 
-
 // Stream object, holds the twitter feed we get posts from, initialized at the first
 let stream = null;
 let twitterTimeout = null;
