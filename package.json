@@ -4,28 +4,34 @@
   "description": "A cute bot who cross-posts twitter posts to Discord",
   "main": "src/index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node -r esm dist/index.js",
     "lint": "yarn eslint src/* --fix"
   },
   "engines": {
-    "node": "12.16.1",
-    "npm": "6.14.8"
+    "node": "v15.7.0",
+    "npm": "7.4.3"
   },
-  "author": "Thomas Navennec",
+  "author": "Elise Navennec",
   "license": "AGPL-3.0",
   "devDependencies": {
     "dotenv": "^8.2.0",
+    "@types/fluent": "^0.11.3",
+    "@types/node": "^14.14.7",
+    "@types/pg": "^7.14.5",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.0"
+    "eslint-plugin-import": "^2.20.0",
+    "typescript": "^4.1.5"
   },
   "dependencies": {
     "dblapi.js": "^2.3.0",
-    "discord.js": "^12.0.2",
+    "discord.js": "ahnolds/discord.js#master",
     "esm": "^3.2.25",
     "fluent": "^0.12.0",
     "fortune-teller": "^0.1.2",
     "pg": "^8.2.1",
-    "twitter-lite": "latest",
+    "twitter-lite": "^0.14.0",
     "unfurl.js": "^3.0.1"
   },
   "eslintConfig": {
