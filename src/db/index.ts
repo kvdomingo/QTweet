@@ -1,14 +1,18 @@
-import pg from 'pg';
+import pg from "pg";
 const { Pool } = pg;
-import log from '../log';
+import log from "../log";
 
-type Pool = InstanceType<typeof Pool>
+type Pool = InstanceType<typeof Pool>;
 export let pool: Pool;
+
+const connectionString: string = process.env.DATABASE_URL;
+
+const { NODE_ENV } = process.env;
 
 export const init = () => {
   try {
-    pool = new Pool();
-  } catch(e) {
+    pool = new Pool({ connectionString, ssl: NODE_ENV === "development" ? false : { rejectUnauthorized: false } });
+  } catch (e) {
     log("Can't initialize database:");
     log(e);
   }
@@ -26,7 +30,7 @@ export const sanityCheck = async () => {
   let guilds = 0;
   let users = 0;
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
     // Remove channels that are linked to no subs
     ({ rowCount: channels } = await client.query(`DELETE FROM channels
     WHERE NOT EXISTS (
@@ -45,9 +49,9 @@ export const sanityCheck = async () => {
       SELECT FROM subs
       WHERE  twitterUsers."twitterId" = subs."twitterId"
     );`));
-    await client.query('COMMIT');
+    await client.query("COMMIT");
   } catch (e) {
-    await client.query('ROLLBACK');
+    await client.query("ROLLBACK");
   } finally {
     client.release();
   }

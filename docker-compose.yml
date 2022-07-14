@@ -7,8 +7,8 @@ services:
       args:
         PREFIX: "${PREFIX}"
         BOT_NAME: "${BOT_NAME}"
-    image: navenn_t/qtweet
-    restart: unless-stopped
+    image: kvdomingo/qtweet
+    restart: always
     environment:
       TZ: ${TIMEZONE}
       PGHOST: postgres
@@ -44,18 +44,3 @@ services:
     env_file: .env
     volumes:
       - ./webapp:/opt/webapp
-
-  postgres:
-    image: postgres:13-alpine
-    restart: always
-    volumes:
-      - ./db-init:/docker-entrypoint-initdb.d
-      - pgdata:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      DATABASE_URL: ${DATABASE_URL}
-
-volumes:
-  pgdata:

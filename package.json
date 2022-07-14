@@ -22,6 +22,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
+    "prettier": "^2.7.1",
     "typescript": "^4.7.0-dev.20220227"
   },
   "dependencies": {
@@ -34,5 +35,16 @@
     "pg": "^8.2.1",
     "twitter-lite": "^0.14.0",
     "unfurl.js": "^3.0.1"
+  },
+  "prettier": {
+    "arrowParens": "avoid",
+    "bracketSpacing": true,
+    "jsxSingleQuote": false,
+    "printWidth": 120,
+    "quoteProps": "consistent",
+    "semi": true,
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "all"
   }
 }
