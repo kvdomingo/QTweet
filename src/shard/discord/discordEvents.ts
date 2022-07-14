@@ -1,34 +1,33 @@
 // Config file
-import fortune from 'fortune-teller';
-import QChannel, { isQCSupportedChannel } from '../QChannel/QChannel';
-import { CmdOptions, ParsedCmd} from '.'
+import fortune from "fortune-teller";
+import QChannel, { isQCSupportedChannel } from "../QChannel/QChannel";
+import { CmdOptions, ParsedCmd } from ".";
 // logging
-import log from '../../log';
-import {
-  message as postMessage,
-} from '../post';
-import { createStream, destroyStream } from '../master';
-import { user, login, isTextChannel, isDmChannel, getClient } from './discord';
-import i18n from '../i18n';
-import dbl from '../dbl';
-import { AnyChannel, Guild, Interaction, Message } from 'discord.js';
-import handleCommand from '../commands';
-import { rmGuild, getGuildInfo } from '../../db/guilds';
-import { rmChannel } from '../../db/channels';
-import loadSlashCmds from '../slashCommands'
-import registerSlashCommands from './registerSlashCommands';
-
+import log from "../../log";
+import { message as postMessage } from "../post";
+import { createStream, destroyStream } from "../master";
+import { user, login, isTextChannel, isDmChannel, getClient } from "./discord";
+import i18n from "../i18n";
+import dbl from "../dbl";
+import { AnyChannel, Guild, Interaction, Message } from "discord.js";
+import handleCommand from "../commands";
+import { rmGuild, getGuildInfo } from "../../db/guilds";
+import { rmChannel } from "../../db/channels";
+import loadSlashCmds from "../slashCommands";
+import registerSlashCommands from "./registerSlashCommands";
 
 const parseWords = (line: string): ParsedCmd => {
   const regxp = /(?:--|—)(\w+)(=(?:"|”|“)(.*?)(?:"|”|“)|=(\S+))?|(?:"|”|“)(.*?)(?:"|”|“)|(\S+)/g;
   const args = [];
   const flags = [];
-  const options: CmdOptions = {}
+  const options: CmdOptions = {};
   let match = regxp.exec(line);
   while (match) {
-    if (match[6] || match[5]) { // Single word or multiple word arg
+    if (match[6] || match[5]) {
+      // Single word or multiple word arg
       args.push(match[6] || match[5]);
-    } else if (match[1] && !match[2]) { // Option with no equal
+    } else if (match[1] && !match[2]) {
+      // Option with no equal
       flags.push(match[1]);
     } else {
       const key = match[1];
@@ -50,21 +49,19 @@ export const handleMessage = async (message: Message) => {
   // In case anything goes wrong with the db prefix, still use the old prefix as backup!
   if (message.content.indexOf(prefix) !== 0) {
     if (
-      !!message.mentions
-      && !!message.mentions.members
-      && message.mentions.members.find((item) => item.user.id === user().id)
+      !!message.mentions &&
+      !!message.mentions.members &&
+      message.mentions.members.find(item => item.user.id === user().id)
     ) {
-      message.reply(`${i18n(lang, 'pingReply', {prefix})}\n\n${fortune.fortune()}`);
+      // message.reply(`${i18n(lang, "pingReply", { prefix })}\n\n${fortune.fortune()}`);
+      return;
     } else if (isDmChannel(message.channel)) {
-      postMessage(qc, i18n(lang, 'welcomeMessage'));
+      postMessage(qc, i18n(lang, "welcomeMessage"));
     }
     return;
   }
 
-  const [command, ...words] = message.content
-    .slice(prefix.length)
-    .trim()
-    .split(/ +/g);
+  const [command, ...words] = message.content.slice(prefix.length).trim().split(/ +/g);
 
   const parsedCmd = parseWords(words.join(" "));
   handleCommand(command.toLowerCase(), author, qc, parsedCmd);
@@ -114,7 +111,7 @@ export const handleGuildDelete = async ({ id, name }: Guild) => {
 };
 
 export const handleReady = async () => {
-  log('✅ Logged in to Discord');
+  log("✅ Logged in to Discord");
   // If we're using DBL, init it here
   dbl();
   createStream();
@@ -124,7 +121,7 @@ export const handleReady = async () => {
 
 export const handleChannelDelete = async (c: AnyChannel) => {
   if (!isTextChannel(c)) return;
-  const {id, name} = c;
+  const { id, name } = c;
   const { users } = await rmChannel(id);
   log(`Channel #${name} (${id}) deleted.`);
   if (users > 0) createStream();
