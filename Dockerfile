@@ -41,5 +41,3 @@ RUN yarn install --production
 COPY --from=langbuilder /lang/*.o.ftl lang/
 # Copy dist files over
 COPY --from=compiler /app/dist ./dist
-
-CMD [ "yarn", "start" ]
