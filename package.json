@@ -15,6 +15,7 @@
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.8",
     "@babel/preset-typescript": "^7.14.5",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@types/fluent": "^0.11.3",
     "@types/node": "^17.0.29",
     "@types/pg": "^7.14.5",
@@ -45,6 +46,15 @@
   "prettier": {
     "arrowParens": "avoid",
     "bracketSpacing": true,
+     "importOrder": [
+      "^react$",
+      "^react-dom$",
+      "^react(.*)",
+      "<THIRD_PARTY_MODULES>",
+      "^[./]"
+    ],
+    "importOrderSeparation": false,
+    "importOrderSortSpecifiers": true,
     "jsxSingleQuote": false,
     "printWidth": 120,
     "quoteProps": "consistent",
