@@ -1,15 +1,21 @@
 ## This container generates language files
 FROM alpine:3.7 AS langbuilder
+
 RUN apk add --no-cache gettext
+
 COPY lang/ lang/
 
 ARG BOT_NAME="Tito QTweet"
 ARG PREFIX=%%
 
-RUN for file in ./lang/*.ftl; do f=${file%.ftl}; cat $file | envsubst '$BOT_NAME:$PREFIX' > $f.o.ftl; echo "Built $f.o.ftl "; done
+RUN for file in ./lang/*.ftl; \
+    do f=${file%.ftl}; \
+    cat $file | envsubst '$BOT_NAME:$PREFIX' > $f.o.ftl; echo "Built $f.o.ftl "; \
+    done
 
 ## This container compiles src/ files from typescript to javascript
 FROM node:17-alpine AS compiler
+
 WORKDIR /app
 
 # Copy build files and install using yarn
@@ -22,9 +28,9 @@ COPY . .
 
 RUN yarn build
 
-
 ## This is the actual qtweet container, using the results from the 2 previous containers
 FROM node:17-alpine
+
 WORKDIR /app
 
 COPY package.json .
@@ -35,5 +41,3 @@ RUN yarn install --production
 COPY --from=langbuilder /lang/*.o.ftl lang/
 # Copy dist files over
 COPY --from=compiler /app/dist ./dist
-
-CMD [ "yarn", "start" ]

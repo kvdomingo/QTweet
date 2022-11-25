@@ -4,5 +4,7 @@ node_modules/
 !.example.env
 dist
 .prettierrc
+yarn-error.log
 
 .idea/
+.vscode/
