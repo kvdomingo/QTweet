@@ -9,22 +9,22 @@ let dClient: Client = null;
 export const init = () => {
   try {
     const intents = new Intents();
-    intents.add('GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES')
+    intents.add("GUILDS", "GUILD_MESSAGES", "DIRECT_MESSAGES");
     dClient = new Client({
       messageCacheLifetime: 30,
       messageSweepInterval: 60,
       restGlobalRateLimit: 5,
       intents,
-      partials: ['CHANNEL'],
+      partials: ["CHANNEL"],
     });
-  } catch(e) {
+  } catch (e) {
     log("Can't initialize discord client");
     log(e);
   }
 }
 
 const reconnectionDelay = new Backup({
-  mode: 'exponential',
+  mode: "exponential",
   startValue: 1000,
   maxValue: 60000,
 });
@@ -38,7 +38,7 @@ export const getClient = () => dClient;
 
 export const login = async () => {
   try {
-    log('⚙️ Logging into Discord');
+    log("⚙️ Logging into Discord");
     await dClient.login(process.env.DISCORD_TOKEN);
     reconnectionDelay.reset();
   } catch (err) {
@@ -47,7 +47,7 @@ export const login = async () => {
     setTimeout(login, reconnectionDelay.value());
     reconnectionDelay.increment();
   }
-}
+};
 
 export const user = () => dClient.user;
 

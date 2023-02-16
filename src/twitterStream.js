@@ -1,4 +1,4 @@
-import log from './log';
+import log from "./log";
 
 // Idle delay
 const shortDelay = 1000 * 60 * 15;
@@ -21,9 +21,9 @@ class Stream {
   }
 
   checkNewUsers() {
-    log('⚙️ Checking for new stream users...', null, true);
+    log("⚙️ Checking for new stream users...", null, true);
     if (this.newUserIds === true) {
-      log('⚙️ New users found!', null, true);
+      log("⚙️ New users found!", null, true);
       this.newUserIds = false;
       if (this.stream) {
         this.stream.destroy();
@@ -47,14 +47,14 @@ class Stream {
   doCreate() {
     log(`⚙️ Creating a stream with ${this.userIds.length} registered users`);
     this.stream = this.tClient
-      .stream('statuses/filter', {
+      .stream("statuses/filter", {
         follow: this.userIds.toString(),
-        tweet_mode: 'extended',
+        tweet_mode: "extended",
       })
-      .on('start', this.streamStart)
-      .on('data', this.streamData)
-      .on('error', this.streamError)
-      .on('end', this.streamEnd);
+      .on("start", this.streamStart)
+      .on("data", this.streamData)
+      .on("error", this.streamError)
+      .on("end", this.streamEnd);
     log(`⚙️ Scheduling next check in ${longDelay}ms`, null, true);
     this.timeout = setTimeout(() => {
       this.timeout = null;
@@ -76,15 +76,15 @@ class Stream {
   // effectively resetting the object until next creation
   // If destroyStream is not set, there's no need to destroy it as it's already destroyed
   disconnected(destroyStream = true) {
-    log('Disconnecting stream');
+    log("Disconnecting stream");
     if (this.stream && this.stream.destroy && destroyStream) {
-      log('Destroying stream');
+      log("Destroying stream");
       try {
         this.stream.destroy();
       } catch (e) {
-        console.error('Tried to destroy a stream but ran into error:');
+        console.error("Tried to destroy a stream but ran into error:");
         console.error(e);
-        console.error('Stream object:');
+        console.error("Stream object:");
         console.error(this.stream);
       }
     }

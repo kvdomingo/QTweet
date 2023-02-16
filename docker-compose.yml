@@ -1,6 +1,6 @@
 services:
   qtweet:
-    build: 
+    build:
       context: .
       args:
         PREFIX: "${PREFIX}"

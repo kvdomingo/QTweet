@@ -1,28 +1,33 @@
-import { getInt, pool, sanityCheck } from './index'
+import { getInt, pool, sanityCheck } from "./index";
 
 type DbUser = {
   twitterId: string;
   name: string;
-}
+};
 
 export const getUserIds = async () => {
-    const { rows } = await pool.query<{twitterId: string}>(`SELECT ${getInt('"twitterId"')} FROM twitterUsers`);
-    return rows;
-  };
+  const { rows } = await pool.query<{ twitterId: string }>(`SELECT ${getInt('"twitterId"')} FROM twitterUsers`);
+  return rows;
+};
 
 export const getUsersForSanityCheck = async (limit: number, cursor: number) => {
-  const { rows } = await pool.query<DbUser>(`SELECT ${getInt('"twitterId"')} FROM twitterUsers LIMIT $1 OFFSET $2`, [limit, cursor * limit]);
+  const { rows } = await pool.query<DbUser>(`SELECT ${getInt('"twitterId"')} FROM twitterUsers LIMIT $1 OFFSET $2`, [
+    limit,
+    cursor * limit,
+  ]);
   return rows;
 };
 
 export const bulkDeleteUsers = async (userIds: string[]) => {
   // Delete these users
-  const { rowCount } = await pool.query(`DELETE FROM twitterUsers WHERE "twitterId" IN (${userIds.join(',')})`);
+  const { rowCount } = await pool.query(`DELETE FROM twitterUsers WHERE "twitterId" IN (${userIds.join(",")})`);
   return rowCount;
 };
 
 export const getUserInfo = async (twitterId: string) => {
-  const { rows: [info] } = await pool.query<DbUser>('SELECT * FROM twitterUsers WHERE "twitterId" = $1', [twitterId]);
+  const {
+    rows: [info],
+  } = await pool.query<DbUser>('SELECT * FROM twitterUsers WHERE "twitterId" = $1', [twitterId]);
   return info;
 };
 
@@ -35,7 +40,10 @@ export const updateUser = async (user: any) => {
 };
 
 export const addUser = async (twitterId: string, name: string) => {
-  const { rowCount } = await pool.query('INSERT INTO twitterUsers("twitterId", "name") VALUES($1, $2) ON CONFLICT DO NOTHING', [twitterId, name]);
+  const { rowCount } = await pool.query(
+    'INSERT INTO twitterUsers("twitterId", "name") VALUES($1, $2) ON CONFLICT DO NOTHING',
+    [twitterId, name],
+  );
   return rowCount;
 };
 

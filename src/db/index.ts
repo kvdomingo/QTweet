@@ -1,6 +1,7 @@
-import pg from "pg";
-const { Pool } = pg;
 import log from "../log";
+import pg from "pg";
+
+const { Pool } = pg;
 
 type Pool = InstanceType<typeof Pool>;
 export let pool: Pool;

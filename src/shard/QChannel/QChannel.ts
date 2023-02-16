@@ -153,7 +153,7 @@ class QChannel {
 
   // Best channel starting from this channel
   // Can return null
-  async bestChannel(msgType = 'message') {
+  async bestChannel(msgType = "message") {
     try {
       const c = await this.obj();
       if (isDmChannel(c) || checkFunction(c, msgType)) {
@@ -161,7 +161,7 @@ class QChannel {
       }
       // From now on we can't post in this channel
       return QChannel.bestGuildChannel(await this.guild(), msgType);
-    } catch(e) {
+    } catch (e) {
       console.log("No bestchannel for invalid channel");
       console.log(e);
       console.log(this.id);

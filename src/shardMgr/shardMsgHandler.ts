@@ -1,15 +1,11 @@
-import {
-  createStream,
-} from '../twitter';
-import {
-  start, tweet, tweetId, stop, announce,
-} from './botCommands';
-import log from '../log';
-import { Shard } from 'discord.js';
-import { MasterResponseMsg, ShardCmd, ShardMsg, ShardMsgHandlerFunction } from '.';
+import { MasterResponseMsg, ShardCmd, ShardMsg, ShardMsgHandlerFunction } from ".";
+import log from "../log";
+import { createStream } from "../twitter";
+import { announce, start, stop, tweet, tweetId } from "./botCommands";
+import { Shard } from "discord.js";
 
-const validCommands : {
-  [cmd in ShardCmd]: ShardMsgHandlerFunction<cmd>
+const validCommands: {
+  [cmd in ShardCmd]: ShardMsgHandlerFunction<cmd>;
 } = {
   tweet,
   tweetId,
@@ -21,7 +17,7 @@ const validCommands : {
 
 const msgHandler = async (shard: Shard, msg: ShardMsg) => {
   const { cmd } = msg;
-  const commandFunction : ShardMsgHandlerFunction<typeof cmd> = validCommands[cmd];
+  const commandFunction: ShardMsgHandlerFunction<typeof cmd> = validCommands[cmd];
   if (!commandFunction) {
     log(`Can't dispatch unknwn command: ${cmd}`);
     return;
@@ -30,10 +26,10 @@ const msgHandler = async (shard: Shard, msg: ShardMsg) => {
   if (res) {
     const masterResponse: MasterResponseMsg<typeof cmd> = {
       cmd: res.cmd || cmd,
-      qc: res.qc || (msg.cmd !== 'createStream' && msg.cmd !== 'announce' ? msg.qc : undefined),
+      qc: res.qc || (msg.cmd !== "createStream" && msg.cmd !== "announce" ? msg.qc : undefined),
       msg,
       res,
-    }
+    };
     shard.send(masterResponse);
   }
 };

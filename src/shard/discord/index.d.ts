@@ -1,9 +1,9 @@
 export type CmdOptions = {
-    [key:string]: string;
-}
+  [key: string]: string;
+};
 
 export type ParsedCmd = {
-    args: string[];
-    options: CmdOptions;
-    flags: string[]
-}
+  args: string[];
+  options: CmdOptions;
+  flags: string[];
+};

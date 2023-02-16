@@ -8,7 +8,7 @@ const FlagsEnum = Object.freeze({
   replies: 16,
 });
 
-export type FlagName = 'notext' | 'retweets' | 'noquotes' | 'replies'
+export type FlagName = "notext" | "retweets" | "noquotes" | "replies";
 
 export class Flags {
   val: number;
@@ -58,7 +58,7 @@ export class Flags {
 // Return a serialized flag from a bunch of strings
 export const compute = (options: string[]): number => {
   const flags = new Flags();
-  options.forEach((opt) => {
+  options.forEach(opt => {
     if (FlagsEnum[opt]) {
       flags.set(opt);
     }

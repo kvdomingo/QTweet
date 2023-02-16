@@ -19,9 +19,11 @@ You never have to use Twitter again, just get the good stuff posted to your Disc
 - **Can post to DMs** directly!
 
 # Documentation, commands, etc
+
 [QTweet's full documentation can be found here](https://docs.google.com/document/d/1LGxfhxptioc653pqJaY5owwpZmzTg4rggqwBYcgO73I/edit?usp=sharing).
 
 It contains:
+
 - A detailed command guide describing what you can do with QTweet
 - The translation guide, for those of you who want to translate QTweet
 - A hosting guide, which will put you on the right path to run your own instance of QTweet.

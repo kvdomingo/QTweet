@@ -1,51 +1,50 @@
 // A module for formatting data for displaying
-
-import Discord, {MessageOptions} from 'discord.js';
-import { isSet } from '../flags';
-import i18n from './i18n';
-import { QCSerialized } from './QChannel/type';
-import process from 'process'
+import { isSet } from "../flags";
+import { QCSerialized } from "./QChannel/type";
+import i18n from "./i18n";
+import Discord, { MessageOptions } from "discord.js";
+import process from "process";
 
 const defaults = {
   data: [],
-  formatTitle: () => '',
-  formatField: () => '',
+  formatTitle: () => "",
+  formatField: () => "",
   description: null,
-  noElements: 'genericEmptyList',
-  objectName: 'genericObjects',
+  noElements: "genericEmptyList",
+  objectName: "genericObjects",
   color: 0x0e7675,
 };
 
 type FormatFunc<T, P> = (t: T, p: P) => Promise<string> | string;
 
-const computeFormattedRow = async <T, P=object>(
+const computeFormattedRow = async <T, P = object>(
   elem: T,
   params: P,
   formatTitle: FormatFunc<T, P>,
-  formatField: FormatFunc<T, P>
+  formatField: FormatFunc<T, P>,
 ) => {
   const titlePromise = formatTitle(elem, params);
   const fieldPromise = formatField(elem, params);
   return { title: await titlePromise, field: await fieldPromise };
 };
 
-export const FORMAT_POST_TRANSLATED = 'postTranslated';
-export const FORMAT_POST_EMBEDS = 'postEmbeds';
+export const FORMAT_POST_TRANSLATED = "postTranslated";
+export const FORMAT_POST_EMBEDS = "postEmbeds";
 
 interface PostTranslatedReturn {
-  cmd: typeof FORMAT_POST_TRANSLATED,
-  qc: QCSerialized,
-  trCode: string,
-};
-
-interface PostEmbedsReturn {
-  cmd: typeof FORMAT_POST_EMBEDS,
-  qc: QCSerialized,
-  embeds: MessageOptions[],
+  cmd: typeof FORMAT_POST_TRANSLATED;
+  qc: QCSerialized;
+  trCode: string;
 }
 
-export const formatGenericList = async <T, P=object>(
-  { qc, lang }: {qc: QCSerialized, lang: string},
+interface PostEmbedsReturn {
+  cmd: typeof FORMAT_POST_EMBEDS;
+  qc: QCSerialized;
+  embeds: MessageOptions[];
+}
+
+export const formatGenericList = async <T, P = object>(
+  { qc, lang }: { qc: QCSerialized; lang: string },
   {
     data = defaults.data,
     formatTitle = defaults.formatTitle,
@@ -56,14 +55,14 @@ export const formatGenericList = async <T, P=object>(
     color = defaults.color,
     params,
   }: {
-    data?: T[],
-    formatTitle: FormatFunc<T, P>,
-    formatField: FormatFunc<T, P>,
-    description?: string,
-    noElements?: string,
-    objectName?: string,
-    color?: number,
-    params?: P
+    data?: T[];
+    formatTitle: FormatFunc<T, P>;
+    formatField: FormatFunc<T, P>;
+    description?: string;
+    noElements?: string;
+    objectName?: string;
+    color?: number;
+    params?: P;
   },
 ): Promise<PostEmbedsReturn | PostTranslatedReturn> => {
   if (data.length === 0) {
@@ -83,32 +82,24 @@ export const formatGenericList = async <T, P=object>(
     embed.setDescription(description);
   }
   let counter = 0;
-  const formattedData = await Promise.all(data.map((
-    elem,
-  ) => computeFormattedRow(elem,
-    params,
-    formatTitle,
-    formatField)));
+  const formattedData = await Promise.all(
+    data.map(elem => computeFormattedRow(elem, params, formatTitle, formatField)),
+  );
   for (let i = 0; i < data.length; i += 1) {
-    embed.addField(
-      formattedData[i].title,
-      formattedData[i].field,
-    );
+    embed.addField(formattedData[i].title, formattedData[i].field);
     counter += 1;
     if (counter > 20) {
       page += 1;
-      embeds.push({ embeds: [{...embed}] });
+      embeds.push({ embeds: [{ ...embed }] });
       embed = new Discord.MessageEmbed()
         .setColor(color)
-        .setTitle(
-          `${i18n(lang, objectName, { count: data.length })} (${page}):`,
-        )
+        .setTitle(`${i18n(lang, objectName, { count: data.length })} (${page}):`)
         .setURL(process.env.PROFILE_URL);
       counter = 0;
     }
   }
   if (counter > 0) {
-    embeds.push({ embeds: [{ ...embed }]});
+    embeds.push({ embeds: [{ ...embed }] });
   }
   return {
     cmd: FORMAT_POST_EMBEDS,
@@ -117,31 +108,41 @@ export const formatGenericList = async <T, P=object>(
   };
 };
 
-export const formatTwitterUserShort = (name) => `@${name} (https://twitter.com/${name})`;
+export const formatTwitterUserShort = name => `@${name} (https://twitter.com/${name})`;
 
 const formatSubMsg = (msg: string | undefined) => {
-  if (!msg) return '';
+  if (!msg) return "";
   return `\nWith message: \`${msg}\``;
 };
 
-export const formatFlags = (lang: string, flags: number) => i18n(lang, 'formatFlags', {
-  notext: isSet(flags, 'notext'),
-  retweet: isSet(flags, 'retweets'),
-  noquote: isSet(flags, 'noquotes'),
-  replies: isSet(flags, 'replies'),
-});
+export const formatFlags = (lang: string, flags: number) =>
+  i18n(lang, "formatFlags", {
+    notext: isSet(flags, "notext"),
+    retweet: isSet(flags, "retweets"),
+    noquote: isSet(flags, "noquotes"),
+    replies: isSet(flags, "replies"),
+  });
 
-export const formatSubsList = async (qc: QCSerialized, subs, lang: string) => formatGenericList({ qc, lang }, {
-  data: subs,
-  formatTitle: ({ name }) => formatTwitterUserShort(name),
-  formatField: ({ twitterId, flags, msg }) => `**${i18n(lang, 'id')}:** ${twitterId}\n${formatFlags(lang, flags)}${formatSubMsg(msg)}`,
-  noElements: 'noSubscriptions',
-  objectName: 'subscriptions',
-});
+export const formatSubsList = async (qc: QCSerialized, subs, lang: string) =>
+  formatGenericList(
+    { qc, lang },
+    {
+      data: subs,
+      formatTitle: ({ name }) => formatTwitterUserShort(name),
+      formatField: ({ twitterId, flags, msg }) =>
+        `**${i18n(lang, "id")}:** ${twitterId}\n${formatFlags(lang, flags)}${formatSubMsg(msg)}`,
+      noElements: "noSubscriptions",
+      objectName: "subscriptions",
+    },
+  );
 
-export const formatLanguages = async (qc: QCSerialized, languagesList: string[], lang: string) => formatGenericList<string>({ qc, lang }, {
-  data: languagesList,
-  formatTitle: (k: string) => (k === lang ? `[${k}]` : k),
-  formatField: (k: string) => i18n(k, 'languageCredit'),
-  objectName: 'languages',
-});
+export const formatLanguages = async (qc: QCSerialized, languagesList: string[], lang: string) =>
+  formatGenericList<string>(
+    { qc, lang },
+    {
+      data: languagesList,
+      formatTitle: (k: string) => (k === lang ? `[${k}]` : k),
+      formatField: (k: string) => i18n(k, "languageCredit"),
+      objectName: "languages",
+    },
+  );
