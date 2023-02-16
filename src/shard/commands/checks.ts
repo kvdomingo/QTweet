@@ -1,13 +1,13 @@
-import { CheckFn } from '.';
-import { isDmChannel } from '../discord/discord';
-import log from '../../log';
-import process from 'process'
+import { CheckFn } from ".";
+import log from "../../log";
+import { isDmChannel } from "../discord/discord";
+import process from "process";
 
 const envOwnerId = process.env.OWNER_ID;
 const envModRole = process.env.MOD_ROLE;
 
 // Takes an author and returns whether or not they are the owner of the bot
-export const isOwner: CheckFn = (author) => author.id === envOwnerId;
+export const isOwner: CheckFn = author => author.id === envOwnerId;
 
 // Whether or not the author is a server admin (with server-wide powers) or the bot owner
 export const isServerMod: CheckFn = async (author, qChannel) => {
@@ -22,14 +22,10 @@ export const isServerMod: CheckFn = async (author, qChannel) => {
   // Are they an admin or have global management rights? (means they're a moderator)
   const serverWideMod = guildMember.permissions
     .toArray()
-    .find(
-      (perm) => perm === 'ADMINISTRATOR'
-              || perm === 'MANAGE_GUILD'
-              || perm === 'MANAGE_CHANNELS',
-    );
+    .find(perm => perm === "ADMINISTRATOR" || perm === "MANAGE_GUILD" || perm === "MANAGE_CHANNELS");
   if (serverWideMod) return true;
   // Now we can check if they have the appropriate role
-  const modRole = guildMember.roles.cache.find((role) => role.name === envModRole);
+  const modRole = guildMember.roles.cache.find(role => role.name === envModRole);
   return !!modRole;
 };
 
@@ -43,7 +39,7 @@ export const isChannelMod: CheckFn = async (author, qChannel) => {
   }
   const guildMember = guild.members.resolve(author);
   const channelPermissions = channel.permissionsFor(guildMember);
-  return !!channelPermissions.toArray().find((perm) => perm === 'MANAGE_CHANNELS' || perm === 'MANAGE_MESSAGES');
+  return !!channelPermissions.toArray().find(perm => perm === "MANAGE_CHANNELS" || perm === "MANAGE_MESSAGES");
 };
 
 export const isDm: CheckFn = (author, qChannel) => qChannel.isDM;

@@ -1,22 +1,17 @@
 type Constructor = {
-  mode?: 'exponential' | 'linear';
+  mode?: "exponential" | "linear";
   inc?: number;
   startValue?: number;
   maxValue?: number;
-}
+};
 
 class Backup {
-  mode: 'exponential' | 'linear';
+  mode: "exponential" | "linear";
   inc: number;
   startValue: number;
   maxValue: number;
   val: number;
-  constructor({
-    mode = 'exponential',
-    inc = 2,
-    startValue = 0,
-    maxValue = 0,
-  }: Constructor) {
+  constructor({ mode = "exponential", inc = 2, startValue = 0, maxValue = 0 }: Constructor) {
     this.mode = mode;
     this.inc = inc;
     this.startValue = startValue;
@@ -34,7 +29,7 @@ class Backup {
 
   increment() {
     switch (this.mode) {
-      case 'linear':
+      case "linear":
         this.val += this.inc;
         break;
       default:

@@ -1,20 +1,20 @@
 // Config file
-import fortune from "fortune-teller";
-import QChannel, { isQCSupportedChannel } from "../QChannel/QChannel";
 import { CmdOptions, ParsedCmd } from ".";
+import { rmChannel } from "../../db/channels";
+import { getGuildInfo, rmGuild } from "../../db/guilds";
 // logging
 import log from "../../log";
-import { message as postMessage } from "../post";
-import { createStream, destroyStream } from "../master";
-import { user, login, isTextChannel, isDmChannel, getClient } from "./discord";
-import i18n from "../i18n";
-import dbl from "../dbl";
-import { AnyChannel, Guild, Interaction, Message } from "discord.js";
+import QChannel, { isQCSupportedChannel } from "../QChannel/QChannel";
 import handleCommand from "../commands";
-import { rmGuild, getGuildInfo } from "../../db/guilds";
-import { rmChannel } from "../../db/channels";
+import dbl from "../dbl";
+import i18n from "../i18n";
+import { createStream, destroyStream } from "../master";
+import { message as postMessage } from "../post";
 import loadSlashCmds from "../slashCommands";
+import { getClient, isDmChannel, isTextChannel, login, user } from "./discord";
 import registerSlashCommands from "./registerSlashCommands";
+import { AnyChannel, Guild, Interaction, Message } from "discord.js";
+import fortune from "fortune-teller";
 
 const parseWords = (line: string): ParsedCmd => {
   const regxp = /(?:--|—)(\w+)(=(?:"|”|“)(.*?)(?:"|”|“)|=(\S+))?|(?:"|”|“)(.*?)(?:"|”|“)|(\S+)/g;
