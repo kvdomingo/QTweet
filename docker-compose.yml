@@ -38,12 +38,12 @@ services:
       SUPPORTED_LANGS: ${SUPPORTED_LANGS:-en fr ro nl ru sv zh de ja pt}
       SLASH_CMDS_GUILD: ${SLASH_CMDS_GUILD}
     depends_on:
-      - postgres
+      - db
     restart: always
     volumes:
       - ./webapp:/opt/webapp
 
-  postgres:
+  db:
     image: bitnami/postgresql:13
     env_file: .env
     volumes:
